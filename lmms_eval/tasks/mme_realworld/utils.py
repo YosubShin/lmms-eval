@@ -106,6 +106,11 @@ def extract_characters_regex(s, choices=["(A)", "(B)", "(C)", "(D)", "(E)"]):
     for answer_prefix in answer_prefixes:
         s = s.replace(answer_prefix, "")
 
+    # Detect patterns like \boxed{A} (case-insensitive, optional whitespace inside braces)
+    boxed_match = re.search(r"\\boxed\{\s*([A-Ea-e])\s*\}", s)
+    if boxed_match:
+        return boxed_match.group(1).upper()
+
     if len(s.split()) > 10 and not re.search("[ABCDE]", s):
         return ""
     matches = re.search(r"[ABCDE]", s)
