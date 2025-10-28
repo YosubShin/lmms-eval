@@ -75,6 +75,8 @@ dependencies = [
     "sentence_transformers",
     "python-dotenv",
     "qwen-vl-utils>=0.0.14",
+    "vllm==0.11.0",
+    "python-levenshtein>=0.27.1",
 ]
 
 [project.optional-dependencies]

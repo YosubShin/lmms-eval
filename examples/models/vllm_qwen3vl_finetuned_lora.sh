@@ -23,7 +23,7 @@
 # - Qwen/Qwen3-VL-30B-A3B-Thinking
 # - Qwen/Qwen3-VL-235B-A22B-Instruct
 # - Qwen/Qwen3-VL-235B-A22B-Thinking
-MODEL="Qwen/Qwen3-VL-8B-Instruct"
+MODEL="/home/yosubs/koa_scratch/Qwen3-VL/qwen-vl-finetune/output/11k/qwen3-vl-8b-instruct-lora/merged"
 
 # Parallelization Settings
 # Adjust based on your GPU configuration
@@ -36,10 +36,10 @@ BATCH_SIZE=64                # Batch size for evaluation
 
 # Task Configuration
 # Common tasks: mmmu_val, mme, mathvista, ai2d, etc.
-TASKS="mmmu_val,mathvista,ai2d"
+TASKS="mmerealworld_lite,gqa,mmmu_val,ai2d"
 
 # Output Configuration
-OUTPUT_PATH="./logs/qwen3vl_vllm"
+OUTPUT_PATH="./logs/qwen3vl_vllm_finetuned_lora"
 LOG_SAMPLES=true
 LOG_SUFFIX="qwen3vl_vllm"
 
