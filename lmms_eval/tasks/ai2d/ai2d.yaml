@@ -42,7 +42,7 @@ filter_list:
         group_select: 0
         ignore_case: true
         ignore_punctuation: true
-        regex_pattern: "([A-Z])\\."
+        regex_pattern: "(?i)(?:\\\\boxed\\{\\s*([A-Z])\\s*\\}|([A-Z])\\.)"
 
 metric_list:
   - metric: exact_match

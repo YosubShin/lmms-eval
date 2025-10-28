@@ -343,6 +343,11 @@ def parse_multi_choice_response(response, all_choices, index2ans):
     Return the predicted index e.g., A, B, C, D.
     https://github.com/MMMU-Benchmark/MMMU/blob/51ce7f3e829c16bb44bc5445782686b4c3508794/eval/eval_utils.py#L10
     """
+    # If present, use the inner content of \boxed{...} for parsing
+    boxed = extract_boxed_content(response)
+    if boxed is not None and boxed.strip() != "":
+        response = boxed
+
     for char in [",", ".", "!", "?", ";", ":", "'"]:
         response = response.strip(char)
     response = " " + response + " "  # add space to avoid partial match
@@ -435,6 +440,16 @@ def check_is_number(string):
         return False
 
 
+def extract_boxed_content(text):
+    """Extract content inside a LaTeX \\boxed{...} block, if present."""
+    if not isinstance(text, str):
+        return None
+    match = re.search(r"\\boxed\{\s*([\s\S]*?)\s*\}", text)
+    if match:
+        return match.group(1).strip()
+    return None
+
+
 def normalize_str(string):
     """
     Normalize the str to lower case and make them float numbers if possible.
@@ -515,8 +530,12 @@ def parse_open_response(response):
             return [response]
         return key_responses
 
-    # pdb.set_trace()
-    key_responses = get_key_subresponses(response)
+    # If present, prioritize the content inside \boxed{...}
+    boxed = extract_boxed_content(response)
+    if boxed is not None and boxed.strip() != "":
+        key_responses = [boxed]
+    else:
+        key_responses = get_key_subresponses(response)
 
     pred_list = key_responses.copy()  # keep the original string response
     for resp in key_responses:

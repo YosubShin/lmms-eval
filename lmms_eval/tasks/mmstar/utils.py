@@ -1,6 +1,7 @@
 import datetime
 import json
 import os
+import re
 from collections import defaultdict
 
 from loguru import logger as eval_logger
@@ -37,11 +38,27 @@ def mmstar_doc_to_text(doc, lmms_eval_specific_kwargs=None):
     return question
 
 
+def _extract_boxed(text: str) -> str | None:
+    """Return inner content of a LaTeX \\boxed{...} if present, else None."""
+    if not isinstance(text, str):
+        return None
+    m = re.search(r"\\boxed\{\s*([^}]*)\s*\}", text, flags=re.IGNORECASE)
+    return m.group(1) if m else None
+
+
 def exact_match(pred, gt):
     """Brought from MMStar"""
+    # Prefer content inside \boxed{...} if provided
+    boxed_pred = _extract_boxed(pred)
+    if boxed_pred:
+        pred = boxed_pred
+
     answer = gt.lower().replace("\n", " ").strip()
     predict = pred.lower().replace("\n", " ").strip()
     try:
+        # Direct exact match
+        if answer == predict:
+            return 1.0
         if answer == predict[0]:
             return 1.0
         elif predict[0] == "(" and answer == predict[1]:
