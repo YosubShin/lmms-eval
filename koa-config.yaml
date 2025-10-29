@@ -1,0 +1,21 @@
+project: lmms-eval
+default_partition: kill-shared
+modules:
+  python: lang/Python/3.11.5-GCCcore-13.2.0
+  cuda: system/CUDA/12.2.0
+gpu_preferences:
+  partitions:
+    kill-shared:
+    - type: nvidia_h200
+      count: 1
+    - type: nvidia_h100
+      count: 1
+env_watch:
+- scripts/setup_env.sh
+- requirements.txt
+- requirements.lock
+- requirements-dev.txt
+- pyproject.toml
+- poetry.lock
+- uv.lock
+- environment.yml
