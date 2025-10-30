@@ -12,10 +12,4 @@ gpu_preferences:
       count: 1
 env_watch:
 - scripts/setup_env.sh
-- requirements.txt
-- requirements.lock
-- requirements-dev.txt
 - pyproject.toml
-- poetry.lock
-- uv.lock
-- environment.yml
