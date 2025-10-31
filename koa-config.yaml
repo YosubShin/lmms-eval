@@ -3,13 +3,9 @@ default_partition: kill-shared
 modules:
   python: lang/Python/3.11.5-GCCcore-13.2.0
   cuda: system/CUDA/12.2.0
-gpu_preferences:
-  partitions:
-    kill-shared:
-    - type: nvidia_h200
-      count: 1
-    - type: nvidia_h100
-      count: 1
 env_watch:
 - scripts/setup_env.sh
 - pyproject.toml
+snapshot_excludes:
+  - .github
+  - docs
