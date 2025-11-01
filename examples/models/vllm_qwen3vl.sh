@@ -36,7 +36,7 @@ BATCH_SIZE=64                # Batch size for evaluation
 
 # Task Configuration
 # Common tasks: mmmu_val, mme, mathvista, ai2d, etc.
-TASKS="mmmu_val,mathvista,ai2d"
+TASKS="vmcbench"
 
 # Output Configuration
 OUTPUT_PATH="./logs/qwen3vl_vllm"
@@ -67,7 +67,7 @@ echo "Tasks: $TASKS"
 echo "Batch Size: $BATCH_SIZE"
 echo "Output Path: $OUTPUT_PATH"
 echo "=========================================="
-
+ 
 # Build the command
 CMD="uv run python -m lmms_eval \
     --model vllm \

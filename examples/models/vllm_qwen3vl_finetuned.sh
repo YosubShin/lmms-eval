@@ -23,7 +23,7 @@
 # - Qwen/Qwen3-VL-30B-A3B-Thinking
 # - Qwen/Qwen3-VL-235B-A22B-Instruct
 # - Qwen/Qwen3-VL-235B-A22B-Thinking
-MODEL="/home/yosubs/koa_scratch/Qwen3-VL/qwen-vl-finetune/output/qwen3-vl-8b-instruct/checkpoint-600"
+MODEL="/home/yosubs/koa_scratch/Qwen3-VL/qwen-vl-finetune/output/11k/qwen3-vl-8b-instruct/checkpoint-520"
 
 # Parallelization Settings
 # Adjust based on your GPU configuration
@@ -37,7 +37,7 @@ BATCH_SIZE=64                # Batch size for evaluation
 # Task Configuration
 # Common tasks: mmmu_val, mme, mathvista, ai2d, etc.
 # TASKS="mme"
-TASKS="mmmu_val,mathvista,ai2d,gqa,mmstar,mmerealworld_lite"
+TASKS="mmmu_val,mme,mathvista,ai2d,gqa,mmstar,mmerealworld_lite"
 
 # Output Configuration
 OUTPUT_PATH="./logs/qwen3vl_vllm_finetuned"
@@ -70,7 +70,7 @@ echo "Output Path: $OUTPUT_PATH"
 echo "=========================================="
 
 # Build the command
-CMD="uv run python -m lmms_eval \
+CMD="${python_bin} -m uv run --python ${ENV_PYTHON} python -m lmms_eval \
     --model vllm \
     --model_args model=${MODEL},tensor_parallel_size=${TENSOR_PARALLEL_SIZE},data_parallel_size=${DATA_PARALLEL_SIZE},gpu_memory_utilization=${GPU_MEMORY_UTILIZATION} \
     --tasks ${TASKS} \

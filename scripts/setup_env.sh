@@ -15,10 +15,13 @@ PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 log "PROJECT_ROOT=${PROJECT_ROOT}"
 
 # Shared uv-managed environment (overridable via KOA_SHARED_ENV); lives outside job snapshots
-SHARED_ENV_DIR="${KOA_SHARED_ENV:-${PROJECT_ROOT}/../envs/uv}"
+SHARED_ENV_DIR="${KOA_SHARED_ENV:-${PROJECT_ROOT}/../.venv}"
 mkdir -p "${SHARED_ENV_DIR}"
 ENV_PYTHON="${SHARED_ENV_DIR}/bin/python"
 log "SHARED_ENV_DIR=${SHARED_ENV_DIR}"
+
+# Add uv to PATH
+export PATH="${PATH}:~/.local/bin"
 
 # Cache location for environment hashes (used to detect changes between runs)
 ENV_CACHE_DIR="${SHARED_ENV_DIR}/.koa"
@@ -83,9 +86,9 @@ fi
 if [[ "${recreate}" -eq 1 ]]; then
   log "Recreating shared environment at ${SHARED_ENV_DIR}"
   # Ensure uv is available for managing the shared environment
-  if ! "${python_bin}" -m uv --help >/dev/null 2>&1; then
+  if ! uv --help >/dev/null 2>&1; then
     log "uv not detected for ${python_bin}; attempting user install"
-    "${python_bin}" -m pip install --user --upgrade uv
+    curl -LsSf https://astral.sh/uv/install.sh | sh
     log "uv installation attempt completed with exit code $?"
   else
     log "uv already available for ${python_bin}"
@@ -93,11 +96,14 @@ if [[ "${recreate}" -eq 1 ]]; then
 
   # (Re)create the uv-managed environment and install dependencies from this repo snapshot
   log "Creating uv virtualenv with interpreter ${python_bin}"
-  "${python_bin}" -m uv venv --python "${python_bin}" "${SHARED_ENV_DIR}"
+  uv venv --clear "${SHARED_ENV_DIR}"
+  # "${python_bin}" -m uv venv --python "${python_bin}" "${SHARED_ENV_DIR}"
   log "Installing project dependencies into ${ENV_PYTHON}"
-  "${python_bin}" -m uv pip install --python "${ENV_PYTHON}" .
+  uv pip install .
+  # "${python_bin}" -m uv pip install --python "${ENV_PYTHON}" .
   log "Installing extra runtime dependencies into ${ENV_PYTHON}"
-  "${python_bin}" -m uv pip install --python "${ENV_PYTHON}" vllm==0.11.0 qwen-vl-utils
+  uv pip install vllm==0.11.0 qwen-vl-utils
+  # "${python_bin}" -m uv pip install --python "${ENV_PYTHON}" vllm==0.11.0 qwen-vl-utils
 
   if [[ -n "${ENV_HASH_SOURCE}" ]]; then
     mkdir -p "${ENV_CACHE_DIR}"

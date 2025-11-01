@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=lmms-eval
 #SBATCH --partition=kill-shared
-#SBATCH --time=01:00:00
-#SBATCH --cpus-per-task=1
-#SBATCH --mem=8G
+#SBATCH --time=04:00:00
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=128G
 #SBATCH --gres=gpu:nvidia_h200_nvl:1
 
 set -euo pipefail
@@ -55,4 +55,4 @@ echo
 SETUP_ENV_DEBUG=1 \
 source "scripts/setup_env.sh"
 
-srun sh examples/models/vllm_qwen3vl.sh
+srun sh examples/models/vllm_qwen3vl_finetuned.sh
